@@ -1,0 +1,43 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+//定义变量(AA版本)
+def AAVersion = '3.3.2'
+
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        applicationId "com.atguigu.l04_datastorge"
+        minSdkVersion 18
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+
+    //定义对androidannotations.jar的依赖, 并交给apt插件
+    apt "org.androidannotations:androidannotations:$AAVersion"
+    //定义对android - api.jar的依赖, 将编译打包到apk中
+    compile "org.androidannotations:androidannotations-api:$AAVersion"
+
+}
+//使用apt插件的必要配置
+//没有找到对应的解释, 推测说明在功能清单文件中注册生成的组件
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0].processResources.manifestFile
+    }
+}
